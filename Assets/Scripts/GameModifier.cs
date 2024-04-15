@@ -7,6 +7,7 @@ public class GameModifier : MonoBehaviour
     public Button increaseSpeedButton;
     public Button option2Button;
     public Button option3Button;
+    private GameManager gameManager;
 
     public void Initialize()
     {
@@ -20,7 +21,8 @@ public class GameModifier : MonoBehaviour
     }
 
     public void ShowOptions()
-    {
+    {   
+        GameManager.Instance.PauseGame();
         optionsPanel.SetActive(true);
     }
 
@@ -48,5 +50,6 @@ public class GameModifier : MonoBehaviour
     private void ClosePanel()
     {
         optionsPanel.SetActive(false);
+        GameManager.Instance.ResumeGame();
     }
 }
