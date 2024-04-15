@@ -3,16 +3,18 @@ using UnityEngine.UI;  // Needed for UI components
 
 public class GameModifier : MonoBehaviour
 {
-    public GameObject optionsPanel;  // Drag the panel into this field in the Inspector
+    public GameObject optionsPanel;
     public Button increaseSpeedButton;
     public Button option2Button;
     public Button option3Button;
     private GameManager gameManager;
 
+    private void Awake()
+    {
+        optionsPanel.SetActive(false);
+    }
     public void Initialize()
     {
-        // Initially hide the panel
-        optionsPanel.SetActive(false);
 
         // Subscribe button click events
         increaseSpeedButton.onClick.AddListener(IncreaseFallingSpeed);
