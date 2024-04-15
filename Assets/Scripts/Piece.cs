@@ -1,20 +1,30 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Piece : MonoBehaviour
 {
     public Board board { get; private set; }
     public TetrominoData data { get; private set; }
     public Vector3Int[] cells { get; private set; }
+    public TileProperty[] tileProperties;
     public Vector3Int position { get; private set; }
     public int rotationIndex { get; private set; }
 
-    public float stepDelay = 1f;
+    public float stepDelay = 0.6f;
     public float moveDelay = 0.1f;
-    public float lockDelay = 0.5f;
-
+    public float lockDelay = 0.3f;
+    public float probSpecial = 1.0f;
+    public Vector3Int specialCell;
+    public bool hasSpecialCell;
+    public Tile[] tiles { get; private set; }
+    public int specialCellIndex;
     private float stepTime;
     private float moveTime;
     private float lockTime;
+    private bool isInitialized = false;
+
+
+    
 
     public void Initialize(Board board, Vector3Int position, TetrominoData data)
     {
@@ -26,6 +36,7 @@ public class Piece : MonoBehaviour
         stepTime = Time.time + stepDelay;
         moveTime = Time.time + moveDelay;
         lockTime = 0f;
+        isInitialized = true;
 
         if (cells == null) {
             cells = new Vector3Int[data.cells.Length];
@@ -34,10 +45,51 @@ public class Piece : MonoBehaviour
         for (int i = 0; i < cells.Length; i++) {
             cells[i] = (Vector3Int)data.cells[i];
         }
+
+        SetTileProperties();
+        SetTiles();
+    }
+
+    private void SetTileProperties()
+    {
+        float randomValue = UnityEngine.Random.Range(0.0f, 1.0f);
+        tileProperties = InitTilePropertiesArray(cells.Length);
+        if (randomValue <= probSpecial)
+        {
+            int index = Random.Range(0, cells.Length);
+            tileProperties[index].isSpecial = true;
+            specialCell = cells[index];
+            specialCellIndex = index;
+            hasSpecialCell = true;
+        }
+    }
+
+    private void SetTiles()
+    {
+        tiles = new Tile[cells.Length];
+        for (int i = 0; i < cells.Length; i++)
+        {
+            tiles[i] = tileProperties[i].isSpecial ? data.specialTile : data.tile;
+        }
+    }
+
+    private TileProperty[] InitTilePropertiesArray(int length)
+        {
+        TileProperty[] initTileProperties = new TileProperty[length];
+        
+        for (int i = 0; i < length; i++)
+        {
+            initTileProperties[i] = new TileProperty { isSpecial = false };
+        }
+        specialCell = Vector3Int.zero;
+        hasSpecialCell = false;
+        
+        return initTileProperties;
     }
 
     private void Update()
     {
+        if (!isInitialized) return;
         board.Clear(this);
 
         // We use a timer to allow the player to make adjustments to the piece
@@ -45,9 +97,9 @@ public class Piece : MonoBehaviour
         lockTime += Time.deltaTime;
 
         // Handle rotation
-        if (Input.GetKeyDown(KeyCode.Q)) {
+        if (Input.GetKeyDown(KeyCode.Z)) {
             Rotate(-1);
-        } else if (Input.GetKeyDown(KeyCode.E)) {
+        } else if (Input.GetKeyDown(KeyCode.X)) {
             Rotate(1);
         }
 
@@ -73,7 +125,7 @@ public class Piece : MonoBehaviour
     private void HandleMoveInputs()
     {
         // Soft drop movement
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.DownArrow))
         {
             if (Move(Vector2Int.down)) {
                 // Update the step time to prevent double movement
@@ -82,9 +134,9 @@ public class Piece : MonoBehaviour
         }
 
         // Left/right movement
-        if (Input.GetKey(KeyCode.A)) {
+        if (Input.GetKey(KeyCode.LeftArrow)) {
             Move(Vector2Int.left);
-        } else if (Input.GetKey(KeyCode.D)) {
+        } else if (Input.GetKey(KeyCode.RightArrow)) {
             Move(Vector2Int.right);
         }
     }

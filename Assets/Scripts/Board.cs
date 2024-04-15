@@ -4,11 +4,15 @@ using UnityEngine.Tilemaps;
 public class Board : MonoBehaviour
 {
     public Tilemap tilemap { get; private set; }
+    public TilePropertyMap propertyMap { get; private set; }
     public Piece activePiece { get; private set; }
+    public GameModifier gameModifier; 
 
     public TetrominoData[] tetrominoes;
     public Vector2Int boardSize = new Vector2Int(10, 20);
     public Vector3Int spawnPosition = new Vector3Int(-1, 8, 0);
+    public float minStepDelay = 0.1f;
+    public float speedIncreaseFactor = 0.1f;
 
     public RectInt Bounds {
         get
@@ -17,20 +21,23 @@ public class Board : MonoBehaviour
             return new RectInt(position, boardSize);
         }
     }
+    public ScoreBoard scoreBoard  { get; private set; }
+    public int Score { get; private set; } = 0;
 
-    private void Awake()
+    public void Initialize()
     {
         tilemap = GetComponentInChildren<Tilemap>();
+        propertyMap = GetComponentInChildren<TilePropertyMap>();
         activePiece = GetComponentInChildren<Piece>();
+        scoreBoard = GetComponentInChildren<ScoreBoard>();
+        gameModifier = GetComponentInChildren<GameModifier>();
+        gameModifier.Initialize();
+        scoreBoard.UpdateScore(Score);
+        scoreBoard.UpdateSpeed(activePiece.stepDelay);
 
         for (int i = 0; i < tetrominoes.Length; i++) {
             tetrominoes[i].Initialize();
         }
-    }
-
-    private void Start()
-    {
-        SpawnPiece();
     }
 
     public void SpawnPiece()
@@ -50,6 +57,7 @@ public class Board : MonoBehaviour
     public void GameOver()
     {
         tilemap.ClearAllTiles();
+        propertyMap.ClearAllTiles();
 
         // Do anything else you want on game over here..
     }
@@ -59,7 +67,8 @@ public class Board : MonoBehaviour
         for (int i = 0; i < piece.cells.Length; i++)
         {
             Vector3Int tilePosition = piece.cells[i] + piece.position;
-            tilemap.SetTile(tilePosition, piece.data.tile);
+            tilemap.SetTile(tilePosition, piece.tiles[i]);
+            propertyMap.SetTile(tilePosition, piece.tileProperties[i]);
         }
     }
 
@@ -133,13 +142,25 @@ public class Board : MonoBehaviour
     public void LineClear(int row)
     {
         RectInt bounds = Bounds;
+        int specialCellCleared = 0;
 
         // Clear all tiles in the row
         for (int col = bounds.xMin; col < bounds.xMax; col++)
         {
             Vector3Int position = new Vector3Int(col, row, 0);
-            tilemap.SetTile(position, null);
+            if (IsSpecialCell(position))
+        {
+            specialCellCleared ++;
         }
+            tilemap.SetTile(position, null);
+            propertyMap.SetTile(position, new TileProperty { isSpecial = true });
+        }
+        while (specialCellCleared > 0)
+    {
+        IncreaseFallingSpeed();
+        specialCellCleared --;
+    }
+        gameModifier.ShowOptions();
 
         // Shift every row above down one
         while (row < bounds.yMax)
@@ -155,6 +176,22 @@ public class Board : MonoBehaviour
 
             row++;
         }
+        Score += 100;
+        scoreBoard.UpdateScore(Score);
     }
 
-}
+    private bool IsSpecialCell(Vector3Int position)
+    {
+        return propertyMap.IsTileSpecial(position);
+    }
+
+    // Method to increase the falling speed of the active piece
+    private void IncreaseFallingSpeed()
+    {
+        // Increase the speed by reducing the delay
+        activePiece.stepDelay = Mathf.Max(minStepDelay, activePiece.stepDelay - speedIncreaseFactor);
+        // Update the UI if necessary
+        scoreBoard.UpdateSpeed(activePiece.stepDelay); // Assuming you have this method in scoreBoard
+    }
+
+    }

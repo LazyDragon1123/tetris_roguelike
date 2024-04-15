@@ -10,15 +10,18 @@ public class Ghost : MonoBehaviour
     public Tilemap tilemap { get; private set; }
     public Vector3Int[] cells { get; private set; }
     public Vector3Int position { get; private set; }
+    private bool isInitialized = false;
 
-    private void Awake()
+    public void Initialize()
     {
         tilemap = GetComponentInChildren<Tilemap>();
         cells = new Vector3Int[4];
+        isInitialized = true;
     }
 
     private void LateUpdate()
     {
+        if (!isInitialized) return;
         Clear();
         Copy();
         Drop();
