@@ -11,6 +11,7 @@ public class Ghost : MonoBehaviour
     public Vector3Int[] cells { get; private set; }
     public Vector3Int position { get; private set; }
     private bool isInitialized = false;
+    private GameManager gameManager;
 
     public void Initialize()
     {
@@ -20,7 +21,8 @@ public class Ghost : MonoBehaviour
     }
 
     private void LateUpdate()
-    {
+    {   
+        if (GameManager.isGamePaused) return;
         if (!isInitialized) return;
         Clear();
         Copy();

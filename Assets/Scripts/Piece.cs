@@ -22,6 +22,7 @@ public class Piece : MonoBehaviour
     private float moveTime;
     private float lockTime;
     private bool isInitialized = false;
+    private GameManager gameManager;
 
 
     
@@ -89,6 +90,7 @@ public class Piece : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.isGamePaused) return;
         if (!isInitialized) return;
         board.Clear(this);
 
