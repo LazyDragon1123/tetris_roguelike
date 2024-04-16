@@ -1034,7 +1034,7 @@ GameObject:
   - component: {fileID: 1222173122}
   - component: {fileID: 1222173121}
   m_Layer: 5
-  m_Name: GameModifier
+  m_Name: GameModifierCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1116,13 +1116,61 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1409852461}
-  m_Father: {fileID: 1887623654}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &1232434647
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1232434649}
+  - component: {fileID: 1232434648}
+  m_Layer: 0
+  m_Name: GameModifier
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1232434648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1232434647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c9db99c7871e4b93a94381d8b8a7679, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  optionsPanel: {fileID: 1409852460}
+  increaseSpeedButton: {fileID: 1274019475}
+  option2Button: {fileID: 2037356856}
+  option3Button: {fileID: 2072788525}
+--- !u!4 &1232434649
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1232434647}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.2688973, y: 1.3496063, z: 3.2167034}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1429556102}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1253872411
 GameObject:
   m_ObjectHideFlags: 0
@@ -1461,6 +1509,7 @@ MonoBehaviour:
   board: {fileID: 1887623656}
   ghost: {fileID: 1253872414}
   ready: {fileID: 769533171}
+  gameModifier: {fileID: 1232434648}
 --- !u!4 &1429556102
 Transform:
   m_ObjectHideFlags: 0
@@ -1474,6 +1523,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1232434649}
   - {fileID: 769533170}
   - {fileID: 1887623654}
   - {fileID: 1253872413}
@@ -2005,7 +2055,6 @@ GameObject:
   - component: {fileID: 1887623653}
   - component: {fileID: 1887623656}
   - component: {fileID: 1887623655}
-  - component: {fileID: 1887623657}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -2041,7 +2090,6 @@ Transform:
   - {fileID: 1740428210}
   - {fileID: 1259767945}
   - {fileID: 564011154}
-  - {fileID: 1222173124}
   m_Father: {fileID: 1429556102}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1887623655
@@ -2076,7 +2124,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d4fe201741a0f14c82a9ce960b9f5e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameModifier: {fileID: 0}
   tetrominoes:
   - tile: {fileID: 11400000, guid: 44ca2746c7d1444f098c0717424a376e, type: 2}
     specialTile: {fileID: 11400000, guid: f134dc804067a4c739171de1712d3f84, type: 2}
@@ -2103,22 +2150,6 @@ MonoBehaviour:
   spawnPosition: {x: -1, y: 8, z: 0}
   minStepDelay: 0.1
   speedIncreaseFactor: 0.1
---- !u!114 &1887623657
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1887623652}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c9db99c7871e4b93a94381d8b8a7679, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  optionsPanel: {fileID: 1409852460}
-  increaseSpeedButton: {fileID: 1274019475}
-  option2Button: {fileID: 2037356856}
-  option3Button: {fileID: 2072788525}
 --- !u!1 &2037356854
 GameObject:
   m_ObjectHideFlags: 0
@@ -2590,3 +2621,4 @@ SceneRoots:
   - {fileID: 1838470381}
   - {fileID: 1429556102}
   - {fileID: 765002198}
+  - {fileID: 1222173124}

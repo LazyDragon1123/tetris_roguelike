@@ -6,7 +6,7 @@ public class Board : MonoBehaviour
     public Tilemap tilemap { get; private set; }
     public TilePropertyMap propertyMap { get; private set; }
     public Piece activePiece { get; private set; }
-    public GameModifier gameModifier; 
+    
 
     public TetrominoData[] tetrominoes;
     public Vector2Int boardSize = new Vector2Int(10, 20);
@@ -23,15 +23,15 @@ public class Board : MonoBehaviour
     }
     public ScoreBoard scoreBoard  { get; private set; }
     public int Score { get; private set; } = 0;
+    private GameModifier gameModifier; 
 
-    public void Initialize()
+    public void Initialize(GameModifier mod)
     {
         tilemap = GetComponentInChildren<Tilemap>();
         propertyMap = GetComponentInChildren<TilePropertyMap>();
         activePiece = GetComponentInChildren<Piece>();
         scoreBoard = GetComponentInChildren<ScoreBoard>();
-        gameModifier = GetComponentInChildren<GameModifier>();
-        gameModifier.Initialize();
+        gameModifier = mod;
         scoreBoard.UpdateScore(Score);
         scoreBoard.UpdateSpeed(activePiece.stepDelay);
 
