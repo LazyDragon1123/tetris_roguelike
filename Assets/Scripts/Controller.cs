@@ -14,7 +14,7 @@ public class Controller : MonoBehaviour {
     private void GameStart() {
         gameModifier.Initialize();
         board.Initialize(gameModifier);
-        ghost.Initialize();
+        ghost.Initialize(gameModifier);
         board.SpawnPiece();
     }
 

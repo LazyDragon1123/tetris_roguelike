@@ -12,11 +12,13 @@ public class Ghost : MonoBehaviour
     public Vector3Int position { get; private set; }
     private bool isInitialized = false;
     private GameManager gameManager;
+    private GameModifier gameModifier;
 
-    public void Initialize()
+    public void Initialize(GameModifier mod)
     {
         tilemap = GetComponentInChildren<Tilemap>();
         cells = new Vector3Int[4];
+        gameModifier = mod;
         isInitialized = true;
     }
 
