@@ -12,18 +12,23 @@ public class Ghost : MonoBehaviour
     public Vector3Int position { get; private set; }
     private bool isInitialized = false;
     private GameManager gameManager;
-    private GameModifier gameModifier;
+    private bool isActive = false;
 
-    public void Initialize(GameModifier mod)
+    public void Initialize()
     {
         tilemap = GetComponentInChildren<Tilemap>();
         cells = new Vector3Int[4];
-        gameModifier = mod;
         isInitialized = true;
+        isActive = true;
     }
 
+    public void SetActive(bool active)
+    {
+        isActive = active;
+    }
     private void LateUpdate()
     {   
+        if (!isActive) return;
         if (GameManager.isGamePaused) return;
         if (!isInitialized) return;
         Clear();
@@ -39,6 +44,10 @@ public class Ghost : MonoBehaviour
             Vector3Int tilePosition = cells[i] + position;
             tilemap.SetTile(tilePosition, null);
         }
+    }
+    public void ClearAllTiles()
+    {
+        tilemap.ClearAllTiles();
     }
 
     private void Copy()

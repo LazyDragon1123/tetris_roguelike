@@ -13,6 +13,7 @@ public class Board : MonoBehaviour
     public Vector3Int spawnPosition = new Vector3Int(-1, 8, 0);
     public float minStepDelay = 0.1f;
     public float speedIncreaseFactor = 0.1f;
+    private GameModifier gameModifier;
 
     public RectInt Bounds {
         get
@@ -23,15 +24,13 @@ public class Board : MonoBehaviour
     }
     public ScoreBoard scoreBoard  { get; private set; }
     public int Score { get; private set; } = 0;
-    private GameModifier gameModifier; 
 
-    public void Initialize(GameModifier mod)
+    public void Initialize()
     {
         tilemap = GetComponentInChildren<Tilemap>();
         propertyMap = GetComponentInChildren<TilePropertyMap>();
         activePiece = GetComponentInChildren<Piece>();
         scoreBoard = GetComponentInChildren<ScoreBoard>();
-        gameModifier = mod;
         scoreBoard.UpdateScore(Score);
         scoreBoard.UpdateSpeed(activePiece.stepDelay);
 
@@ -40,6 +39,10 @@ public class Board : MonoBehaviour
         }
     }
 
+    public void LinkToModifier(GameModifier modifier)
+    {
+        gameModifier = modifier;
+    }
     public void SpawnPiece()
     {
         int random = Random.Range(0, tetrominoes.Length);
@@ -157,7 +160,6 @@ public class Board : MonoBehaviour
         }
         while (specialCellCleared > 0)
     {
-        IncreaseFallingSpeed();
         specialCellCleared --;
     }
         gameModifier.ShowOptions();
@@ -186,7 +188,7 @@ public class Board : MonoBehaviour
     }
 
     // Method to increase the falling speed of the active piece
-    private void IncreaseFallingSpeed()
+    public void IncreaseFallingSpeed()
     {
         // Increase the speed by reducing the delay
         activePiece.stepDelay = Mathf.Max(minStepDelay, activePiece.stepDelay - speedIncreaseFactor);

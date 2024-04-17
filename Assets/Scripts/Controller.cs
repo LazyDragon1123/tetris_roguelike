@@ -12,9 +12,10 @@ public class Controller : MonoBehaviour {
     }
 
     private void GameStart() {
-        gameModifier.Initialize();
-        board.Initialize(gameModifier);
-        ghost.Initialize(gameModifier);
+        board.Initialize();
+        ghost.Initialize();
+        gameModifier.Initialize(board, ghost);
+        board.LinkToModifier(gameModifier);
         board.SpawnPiece();
     }
 
