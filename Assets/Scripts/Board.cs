@@ -5,7 +5,7 @@ public class Board : MonoBehaviour
 {
     public Tilemap tilemap { get; private set; }
     public TilePropertyMap propertyMap { get; private set; }
-    public Piece activePiece
+    public Piece activePiece;
     
 
     public TetrominoData[] tetrominoes;
