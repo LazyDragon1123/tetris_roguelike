@@ -161,7 +161,8 @@ public class Board : MonoBehaviour
         while (specialCellCleared > 0)
     {
         specialCellCleared --;
-    }
+    }   
+        gameModifier.InitializeOptions();
         gameModifier.ShowOptions();
 
         // Shift every row above down one
