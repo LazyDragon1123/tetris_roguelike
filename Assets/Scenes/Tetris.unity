@@ -1152,10 +1152,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c9db99c7871e4b93a94381d8b8a7679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  availableOptions: []
   optionsPanel: {fileID: 1409852460}
-  increaseSpeedButton: {fileID: 1274019475}
-  option2Button: {fileID: 2037356856}
-  option3Button: {fileID: 2072788525}
+  optionButtons:
+  - {fileID: 1274019475}
+  - {fileID: 2037356856}
+  - {fileID: 2072788525}
 --- !u!4 &1232434649
 Transform:
   m_ObjectHideFlags: 0
