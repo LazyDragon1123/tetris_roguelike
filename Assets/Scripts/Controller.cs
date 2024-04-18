@@ -4,6 +4,7 @@ public class Controller : MonoBehaviour {
     public Board board;
     public Ghost ghost;
     public Ready ready;
+    public GameModifier gameModifier;
 
     private void Start() {
         ready.onReadyComplete += GameStart;  // Subscribe to the event
@@ -13,6 +14,8 @@ public class Controller : MonoBehaviour {
     private void GameStart() {
         board.Initialize();
         ghost.Initialize();
+        gameModifier.Initialize(board, ghost);
+        board.LinkToModifier(gameModifier);
         board.SpawnPiece();
     }
 
