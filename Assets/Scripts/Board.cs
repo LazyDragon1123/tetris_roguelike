@@ -5,7 +5,7 @@ public class Board : MonoBehaviour
 {
     public Tilemap tilemap { get; private set; }
     public TilePropertyMap propertyMap { get; private set; }
-    public Piece activePiece { get; private set; }
+    public Piece activePiece
     
 
     public TetrominoData[] tetrominoes;
@@ -22,8 +22,8 @@ public class Board : MonoBehaviour
             return new RectInt(position, boardSize);
         }
     }
-    public ScoreBoard scoreBoard  { get; private set; }
-    public int Score { get; private set; } = 0;
+    public ScoreBoard scoreBoard;
+    public int Score = 0;
 
     public void Initialize()
     {
@@ -158,12 +158,10 @@ public class Board : MonoBehaviour
             tilemap.SetTile(position, null);
             propertyMap.SetTile(position, new TileProperty { isSpecial = true });
         }
-        while (specialCellCleared > 0)
+        if (specialCellCleared > 0)
     {
-        specialCellCleared --;
-    }   
-        gameModifier.InitializeOptions();
         gameModifier.ShowOptions();
+    }   
 
         // Shift every row above down one
         while (row < bounds.yMax)

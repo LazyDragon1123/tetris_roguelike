@@ -13,7 +13,7 @@ public class GameModifier : MonoBehaviour
         public string buttonText;
         public UnityAction action;
 
-        public GameOption(string text, UnityAction act)
+        public GameOption(string text, UnityAction act)  // TODO: add weight to the options
         {
             buttonText = text;
             action = act;
@@ -29,23 +29,15 @@ public class GameModifier : MonoBehaviour
     private void Awake()
     {
         optionsPanel.SetActive(false);
+        SetGameOptions();
     }
     public void Initialize(Board _board, Ghost _ghost)
     {
 
-        // // Subscribe button click events
-        // option1Button.onClick.AddListener(Option1);
-        // option2Button.onClick.AddListener(Option2);
-        // option3Button.onClick.AddListener(Option3);
         board = _board;
         ghost = _ghost;
     }
 
-    public void InitializeOptions()
-    {
-        SetGameOptions();
-        SetupOptionsUI();
-    }
 
     private void SetGameOptions()
     {
@@ -53,10 +45,29 @@ public class GameModifier : MonoBehaviour
         availableOptions.Add(new GameOption("Increase Speed", IncreaseFallingSpeed));
         availableOptions.Add(new GameOption("Clear Ghost", ClearAllGhosts));
         availableOptions.Add(new GameOption("Activate Power", ActivatePower));
+        availableOptions.Add(new GameOption("Score +1000", ScoreSmall));
+        availableOptions.Add(new GameOption("Score +5000", ScoreMedium));
+        availableOptions.Add(new GameOption("Score +10000", ScoreLarge));
+        availableOptions.Add(new GameOption("Spawn Rate Up", SpawnRateUp));
     }
 
+
+    private void ShuffleOptions<T>(List<T> list)
+    {
+        System.Random rng = new System.Random();  // You can also use UnityEngine.Random if you prefer
+        int n = list.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = rng.Next(n + 1);
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
+    }
     private void SetupOptionsUI()
     {
+        ShuffleOptions(availableOptions);
         for (int i = 0; i < optionButtons.Length; i++)
         {
             if (i < availableOptions.Count)
@@ -76,6 +87,7 @@ public class GameModifier : MonoBehaviour
 
     public void ShowOptions()
     {   
+        SetupOptionsUI();
         GameManager.Instance.PauseGame();
         optionsPanel.SetActive(true);
     }
@@ -88,16 +100,41 @@ public class GameModifier : MonoBehaviour
 
     private void IncreaseFallingSpeed()
     {
-        Debug.Log("Increasing falling speed");
+        board.IncreaseFallingSpeed();
     }
 
     private void ClearAllGhosts()
     {
-        Debug.Log("Clearing all ghosts");
+        ghost.ClearAllTiles();
+        ghost.SetActive(false);
     }
 
     private void ActivatePower()
     {
         Debug.Log("Activating power");
     }
+
+    private void ScoreSmall()
+    {
+        board.Score += 1000;
+        board.scoreBoard.UpdateScore(board.Score);
+    }
+
+    private void ScoreMedium()
+    {
+        board.Score += 5000;
+        board.scoreBoard.UpdateScore(board.Score);
+    }
+
+    private void ScoreLarge()
+    {
+        board.Score += 10000;
+        board.scoreBoard.UpdateScore(board.Score);
+    }
+
+    private void SpawnRateUp()
+    {
+        board.activePiece.probSpecial = Mathf.Min(1.0f, board.activePiece.probSpecial + 0.1f);
+    }
+
 }
