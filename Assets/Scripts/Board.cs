@@ -14,6 +14,7 @@ public class Board : MonoBehaviour
     public float minStepDelay = 0.1f;
     public float speedIncreaseFactor = 0.1f;
     private GameModifier gameModifier;
+    public TetrominoHolder tetrominoHolder;
 
     public RectInt Bounds {
         get
@@ -34,6 +35,9 @@ public class Board : MonoBehaviour
         scoreBoard.UpdateScore(Score);
         scoreBoard.UpdateSpeed(activePiece.stepDelay);
 
+        tetrominoHolder = GetComponentInChildren<TetrominoHolder>();
+        tetrominoHolder.Initialize(this);
+
         for (int i = 0; i < tetrominoes.Length; i++) {
             tetrominoes[i].Initialize();
         }
@@ -48,6 +52,11 @@ public class Board : MonoBehaviour
         int random = Random.Range(0, tetrominoes.Length);
         TetrominoData data = tetrominoes[random];
 
+        SetPiece(data);
+    }
+
+    public void SetPiece(TetrominoData data)
+    {
         activePiece.Initialize(this, spawnPosition, data);
 
         if (IsValidPosition(activePiece, spawnPosition)) {
@@ -193,6 +202,19 @@ public class Board : MonoBehaviour
         activePiece.stepDelay = Mathf.Max(minStepDelay, activePiece.stepDelay - speedIncreaseFactor);
         // Update the UI if necessary
         scoreBoard.UpdateSpeed(activePiece.stepDelay); // Assuming you have this method in scoreBoard
+    }
+
+    private void Update()
+    {
+        HandleInput();
+    }
+
+    private void HandleInput()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            tetrominoHolder.SwapOrHoldTetromino();
+        }
     }
 
     }

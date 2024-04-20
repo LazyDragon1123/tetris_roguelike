@@ -170,6 +170,7 @@ public class Piece : MonoBehaviour
         board.Set(this);
         board.ClearLines();
         board.SpawnPiece();
+        board.tetrominoHolder.ResetCanHold();
     }
 
     private bool Move(Vector2Int translation)

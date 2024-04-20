@@ -2057,6 +2057,7 @@ GameObject:
   - component: {fileID: 1887623653}
   - component: {fileID: 1887623656}
   - component: {fileID: 1887623655}
+  - component: {fileID: 1887623657}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -2126,6 +2127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d4fe201741a0f14c82a9ce960b9f5e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activePiece: {fileID: 0}
   tetrominoes:
   - tile: {fileID: 11400000, guid: 44ca2746c7d1444f098c0717424a376e, type: 2}
     specialTile: {fileID: 11400000, guid: f134dc804067a4c739171de1712d3f84, type: 2}
@@ -2152,6 +2154,30 @@ MonoBehaviour:
   spawnPosition: {x: -1, y: 8, z: 0}
   minStepDelay: 0.1
   speedIncreaseFactor: 0.1
+  tetrominoHolder: {fileID: 0}
+  scoreBoard: {fileID: 0}
+  Score: 0
+--- !u!114 &1887623657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1887623652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf7db3f40430c4b9ea9cd6ac0800dcc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  heldTetrominos:
+  - tile: {fileID: 0}
+    specialTile: {fileID: 0}
+    tetromino: 0
+  - tile: {fileID: 0}
+    specialTile: {fileID: 0}
+    tetromino: 0
+  holdCount: 0
+  canHold: 1
 --- !u!1 &2037356854
 GameObject:
   m_ObjectHideFlags: 0
