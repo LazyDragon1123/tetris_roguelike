@@ -6,16 +6,22 @@ public class TetrominoHolder : MonoBehaviour
     public int holdCapacity = 1;
     public int holdCount = 0;
     public bool canHold = true;
+    public bool isActivated = true;
 
     private Board board;
+    public HolderDisplay holderDisplay;
 
     public void Initialize(Board board)
     {
         this.board = board;
+
+        holderDisplay = GetComponentInChildren<HolderDisplay>();
+        holderDisplay.Initialize(this);
     }
 
     public void SwapOrHoldTetromino()
     {
+        if (!isActivated) return;
         if (!canHold) return;
 
         if (board.activePiece == null)
@@ -46,12 +52,16 @@ public class TetrominoHolder : MonoBehaviour
             board.Clear(board.activePiece);
             board.SetPiece(temp);
         }
-
+        holderDisplay.UpdateDisplay();
         canHold = false;  // Player must make a move before holding again
     }
 
     public void ResetCanHold()
     {
         canHold = true;
+    }
+    public void Disable()
+    {
+        isActivated = false;
     }
 }
