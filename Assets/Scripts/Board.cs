@@ -16,6 +16,7 @@ public class Board : MonoBehaviour
     private GameModifier gameModifier;
     public TetrominoHolder tetrominoHolder;
 
+    public UpcomingTetrominos upcomingTetrominos;
     public RectInt Bounds {
         get
         {
@@ -37,22 +38,41 @@ public class Board : MonoBehaviour
 
         tetrominoHolder = GetComponentInChildren<TetrominoHolder>();
         tetrominoHolder.Initialize(this);
+        upcomingTetrominos = GetComponentInChildren<UpcomingTetrominos>();
+        upcomingTetrominos.Initialize(this);
 
         for (int i = 0; i < tetrominoes.Length; i++) {
             tetrominoes[i].Initialize();
         }
+        InitializeUpcomingTetrominos();
+    }
+    private void InitializeUpcomingTetrominos()
+    {
+        // Preload the upcoming Tetrominos at the start of the game
+        for (int i = 0; i < upcomingTetrominos.previewCount; i++)
+        {
+            upcomingTetrominos.AddNewTetromino(tetrominoes[Random.Range(0, tetrominoes.Length)]);
+        }
+    }
+
+    public void SpawnPiece()
+    {
+        if (upcomingTetrominos.Count > 0)
+        {
+            Debug.Log("Spawning from queue");
+            SetPiece(upcomingTetrominos.GetNextTetromino());
+        }
+        else
+        {
+            Debug.Log("Spawning random");
+            SetPiece(tetrominoes[Random.Range(0, tetrominoes.Length)]);
+        }
+        upcomingTetrominos.AddNewTetromino(tetrominoes[Random.Range(0, tetrominoes.Length)]);
     }
 
     public void LinkToModifier(GameModifier modifier)
     {
         gameModifier = modifier;
-    }
-    public void SpawnPiece()
-    {
-        int random = Random.Range(0, tetrominoes.Length);
-        TetrominoData data = tetrominoes[random];
-
-        SetPiece(data);
     }
 
     public void SetPiece(TetrominoData data)
