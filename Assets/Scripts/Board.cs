@@ -57,16 +57,7 @@ public class Board : MonoBehaviour
 
     public void SpawnPiece()
     {
-        if (upcomingTetrominos.Count > 0)
-        {
-            Debug.Log("Spawning from queue");
-            SetPiece(upcomingTetrominos.GetNextTetromino());
-        }
-        else
-        {
-            Debug.Log("Spawning random");
-            SetPiece(tetrominoes[Random.Range(0, tetrominoes.Length)]);
-        }
+        SetPiece(upcomingTetrominos.GetNextTetromino());
         upcomingTetrominos.AddNewTetromino(tetrominoes[Random.Range(0, tetrominoes.Length)]);
     }
 

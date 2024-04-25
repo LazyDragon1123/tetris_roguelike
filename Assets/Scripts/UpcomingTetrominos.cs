@@ -7,7 +7,7 @@ public class UpcomingTetrominos : MonoBehaviour
     public int previewCount = 2;
     private Board board;
 
-    public UpcomingTetrominosDisplay upcomingTetrominosDisplay;
+    private UpcomingTetrominosDisplay upcomingTetrominosDisplay;
 
     public void Initialize(Board board)
     {
@@ -28,12 +28,12 @@ public class UpcomingTetrominos : MonoBehaviour
     // Method to get the next Tetromino and remove it from the queue
     public TetrominoData GetNextTetromino()
     {
-        if (upcomingTetrominos.Count > 0)
+        if (upcomingTetrominos.Count <= 0)
         {
-            nextTetromino = upcomingTetrominos.Dequeue();
-            upcomingTetrominosDisplay.UpdateDisplay();
-            return nextTetromino;
+            Debug.Log("No upcoming Tetrominos");
         }
-        return null; // or throw an exception depending on your error handling
-    }
+        TetrominoData nextTetromino = upcomingTetrominos.Dequeue();
+        upcomingTetrominosDisplay.UpdateDisplay();
+        return nextTetromino;
+    }   
 }
