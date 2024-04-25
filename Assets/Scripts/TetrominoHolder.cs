@@ -33,16 +33,12 @@ public class TetrominoHolder : MonoBehaviour
 
         if (holdCount < holdCapacity)
         {
-            // Hold the current piece if there's room
-            Debug.Log("Holding piece");
             heldTetrominos[holdCount++] = board.activePiece.data;
             board.Clear(board.activePiece);
             board.SpawnPiece();
         } 
         else if (holdCount > 0)
         {
-            // Swap the current piece with the first held piece
-            Debug.Log("Swapping piece");
             TetrominoData temp = heldTetrominos[0];
             for (int i = 0; i < holdCount - 1; i++)
             {
