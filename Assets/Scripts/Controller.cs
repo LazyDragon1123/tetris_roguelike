@@ -15,7 +15,7 @@ public class Controller : MonoBehaviour {
         board.Initialize();
         ghost.Initialize();
         gameModifier.Initialize(board, ghost);
-        board.LinkToModifier(gameModifier);
+
         board.SpawnPiece();
     }
 

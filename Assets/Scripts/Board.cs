@@ -13,7 +13,6 @@ public class Board : MonoBehaviour
     public Vector3Int spawnPosition = new Vector3Int(-1, 8, 0);
     public float minStepDelay = 0.1f;
     public float speedIncreaseFactor = 0.1f;
-    private GameModifier gameModifier;
     public TetrominoHolder tetrominoHolder;
 
     public UpcomingTetrominos upcomingTetrominos;
@@ -25,6 +24,7 @@ public class Board : MonoBehaviour
         }
     }
     public ScoreBoard scoreBoard;
+    public SpecialCellsCounter specialCellsCounter;
     public int Score = 0;
 
     public void Initialize()
@@ -40,6 +40,9 @@ public class Board : MonoBehaviour
         tetrominoHolder.Initialize(this);
         upcomingTetrominos = GetComponentInChildren<UpcomingTetrominos>();
         upcomingTetrominos.Initialize(this);
+
+        specialCellsCounter = GetComponentInChildren<SpecialCellsCounter>();
+        
 
         for (int i = 0; i < tetrominoes.Length; i++) {
             tetrominoes[i].Initialize();
@@ -59,11 +62,6 @@ public class Board : MonoBehaviour
     {
         SetPiece(upcomingTetrominos.GetNextTetromino());
         upcomingTetrominos.AddNewTetromino(tetrominoes[Random.Range(0, tetrominoes.Length)]);
-    }
-
-    public void LinkToModifier(GameModifier modifier)
-    {
-        gameModifier = modifier;
     }
 
     public void SetPiece(TetrominoData data)
@@ -165,7 +163,7 @@ public class Board : MonoBehaviour
     public void LineClear(int row)
     {
         RectInt bounds = Bounds;
-        int specialCellCleared = 0;
+        // int specialCellCleared = 0;
 
         // Clear all tiles in the row
         for (int col = bounds.xMin; col < bounds.xMax; col++)
@@ -173,15 +171,11 @@ public class Board : MonoBehaviour
             Vector3Int position = new Vector3Int(col, row, 0);
             if (IsSpecialCell(position))
         {
-            specialCellCleared ++;
+            specialCellsCounter.AddSpecialCell();
         }
             tilemap.SetTile(position, null);
             propertyMap.SetTile(position, new TileProperty { isSpecial = true });
         }
-        if (specialCellCleared > 0)
-    {
-        gameModifier.ShowOptions();
-    }   
 
         // Shift every row above down one
         while (row < bounds.yMax)

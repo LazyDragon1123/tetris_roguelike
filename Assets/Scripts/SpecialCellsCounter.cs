@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SpecialCellsCounter : MonoBehaviour
 {
-    public int threshold = 10; // The threshold to trigger options
+    public int threshold = 3; // The threshold to trigger options
     private int specialCellCount = 0;
     public GameModifier gameModifier; // Reference to the GameModifier to call ShowOptions
 
