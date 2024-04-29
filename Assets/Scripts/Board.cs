@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections;
 
 public class Board : MonoBehaviour
 {
@@ -26,6 +27,9 @@ public class Board : MonoBehaviour
     public ScoreBoard scoreBoard;
     public SpecialCellsCounter specialCellsCounter;
     public int Score = 0;
+
+    public Tile bossTile;    // Assign this in the Unity Editor with a specific tile for the boss phase
+    private Vector3Int currentBossCellPosition;
 
     public void Initialize()
     {
@@ -221,5 +225,43 @@ public class Board : MonoBehaviour
             tetrominoHolder.SwapOrHoldTetromino();
         }
     }
-
+    public void StartBossPhase()
+    {
+        StartCoroutine(BossPhaseRoutine());
     }
+    IEnumerator BossPhaseRoutine()
+    {
+        while (true)  // Loop to continuously spawn boss cells
+        {
+            SpawnBossCell();
+            yield return new WaitUntil(() => MoveBossCellDown());  // Wait until the cell cannot move down anymore
+        }
+    }
+
+    void SpawnBossCell()
+    {
+        int randomColumn = Random.Range(0, tilemap.size.x);
+        currentBossCellPosition = new Vector3Int(randomColumn, tilemap.cellBounds.max.y - 1, 0);
+        tilemap.SetTile(currentBossCellPosition, bossTile);
+    }
+
+    bool MoveBossCellDown()
+    {
+        Vector3Int newPosition = new Vector3Int(currentBossCellPosition.x, currentBossCellPosition.y - 1, 0);
+
+        if (!tilemap.HasTile(newPosition) && IsWithinBounds(newPosition))
+        {
+            tilemap.SetTile(currentBossCellPosition, null);  // Clear the current position
+            tilemap.SetTile(newPosition, bossTile);           // Set tile at the new position
+            currentBossCellPosition = newPosition;            // Update the current boss cell position
+            return true;
+        }
+        return false;  // Return false when the boss cell can't move down anymore
+    }
+
+    bool IsWithinBounds(Vector3Int position)
+    {
+        return position.y >= tilemap.cellBounds.min.y;
+    }
+}
+
