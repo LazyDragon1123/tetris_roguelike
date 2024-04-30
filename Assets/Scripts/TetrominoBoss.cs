@@ -10,7 +10,6 @@ public enum TetrominoBoss
 public struct TetrominoBossData
 {
     public Tile tile;
-    public Tile specialTile;
     public TetrominoBoss tetromino;
 
     public Vector2Int[] cells { get; private set; }
@@ -18,7 +17,7 @@ public struct TetrominoBossData
 
     public void Initialize()
     {
-        cells = Data.Cells[tetromino];
-        wallKicks = Data.WallKicks[tetromino];
+        cells = DataBoss.Cells[tetromino];
+        wallKicks = DataBoss.WallKicks[tetromino];
     }
 }

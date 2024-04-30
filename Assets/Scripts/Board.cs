@@ -7,9 +7,11 @@ public class Board : MonoBehaviour
     public Tilemap tilemap { get; private set; }
     public TilePropertyMap propertyMap { get; private set; }
     public Piece activePiece;
+    public FreeFallPiece bossPiece;
     
 
     public TetrominoData[] tetrominoes;
+    public TetrominoBossData[] tetrominoBosses;
     public Vector2Int boardSize = new Vector2Int(10, 20);
     public Vector3Int spawnPosition = new Vector3Int(-1, 8, 0);
     public float minStepDelay = 0.1f;
@@ -28,7 +30,7 @@ public class Board : MonoBehaviour
     public SpecialCellsCounter specialCellsCounter;
     public int Score = 0;
 
-    public Tile bossTile;    // Assign this in the Unity Editor with a specific tile for the boss phase
+    private bool isBossPhase = false;
     private Vector3Int currentBossCellPosition;
 
     public void Initialize()
@@ -36,6 +38,7 @@ public class Board : MonoBehaviour
         tilemap = GetComponentInChildren<Tilemap>();
         propertyMap = GetComponentInChildren<TilePropertyMap>();
         activePiece = GetComponentInChildren<Piece>();
+        bossPiece = GetComponentInChildren<FreeFallPiece>();
         scoreBoard = GetComponentInChildren<ScoreBoard>();
         scoreBoard.UpdateScore(Score);
         scoreBoard.UpdateSpeed(activePiece.stepDelay);
@@ -50,6 +53,9 @@ public class Board : MonoBehaviour
 
         for (int i = 0; i < tetrominoes.Length; i++) {
             tetrominoes[i].Initialize();
+        }
+        for (int i = 0; i < tetrominoBosses.Length; i++) {
+            tetrominoBosses[i].Initialize();
         }
         InitializeUpcomingTetrominos();
     }
@@ -227,41 +233,64 @@ public class Board : MonoBehaviour
     }
     public void StartBossPhase()
     {
-        StartCoroutine(BossPhaseRoutine());
+        isBossPhase = true;
+        SpawnBossCell();
     }
-    IEnumerator BossPhaseRoutine()
+    public void EndBossPhase()
     {
-        while (true)  // Loop to continuously spawn boss cells
-        {
-            SpawnBossCell();
-            yield return new WaitUntil(() => MoveBossCellDown());  // Wait until the cell cannot move down anymore
-        }
+        isBossPhase = false;
     }
 
-    void SpawnBossCell()
+    public void SpawnBossCell()
     {
         int randomColumn = Random.Range(0, tilemap.size.x);
         currentBossCellPosition = new Vector3Int(randomColumn, tilemap.cellBounds.max.y - 1, 0);
-        tilemap.SetTile(currentBossCellPosition, bossTile);
+        SetBossPiece(tetrominoBosses[Random.Range(0, tetrominoBosses.Length)]);
     }
-
-    bool MoveBossCellDown()
+    private void SetBossPiece(TetrominoBossData data)
     {
-        Vector3Int newPosition = new Vector3Int(currentBossCellPosition.x, currentBossCellPosition.y - 1, 0);
-
-        if (!tilemap.HasTile(newPosition) && IsWithinBounds(newPosition))
+        bossPiece.Initialize(this, currentBossCellPosition, data);
+        SetBoss(bossPiece);
+    }
+    public void ClearBoss(FreeFallPiece freeFallPiece)
+    {
+        for (int i = 0; i < freeFallPiece.cells.Length; i++)
         {
-            tilemap.SetTile(currentBossCellPosition, null);  // Clear the current position
-            tilemap.SetTile(newPosition, bossTile);           // Set tile at the new position
-            currentBossCellPosition = newPosition;            // Update the current boss cell position
-            return true;
+            Vector3Int tilePosition = freeFallPiece.cells[i] + freeFallPiece.position;
+            tilemap.SetTile(tilePosition, null);
         }
-        return false;  // Return false when the boss cell can't move down anymore
+    }
+    public void SetBoss(FreeFallPiece freeFallPiece)
+    {
+        for (int i = 0; i < freeFallPiece.cells.Length; i++)
+        {
+            Vector3Int tilePosition = freeFallPiece.cells[i] + freeFallPiece.position;
+            tilemap.SetTile(tilePosition, freeFallPiece.tiles[i]);
+        }
+    }
+    public bool IsValidPositionBoss(FreeFallPiece freeFallPiece, Vector3Int position)
+    {
+        RectInt bounds = Bounds;
+
+        // The position is only valid if every cell is valid
+        for (int i = 0; i < freeFallPiece.cells.Length; i++)
+        {
+            Vector3Int tilePosition = freeFallPiece.cells[i] + position;
+
+            // An out of bounds tile is invalid
+            if (!bounds.Contains((Vector2Int)tilePosition)) {
+                return false;
+            }
+
+            // A tile already occupies the position, thus invalid
+            if (tilemap.HasTile(tilePosition)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
-    bool IsWithinBounds(Vector3Int position)
-    {
-        return position.y >= tilemap.cellBounds.min.y;
-    }
+
 }
 

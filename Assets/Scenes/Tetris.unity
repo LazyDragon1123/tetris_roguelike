@@ -2911,6 +2911,7 @@ GameObject:
   - component: {fileID: 1887623655}
   - component: {fileID: 1887623657}
   - component: {fileID: 1887623658}
+  - component: {fileID: 1887623659}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -2984,6 +2985,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activePiece: {fileID: 0}
+  bossPiece: {fileID: 0}
   tetrominoes:
   - tile: {fileID: 11400000, guid: 44ca2746c7d1444f098c0717424a376e, type: 2}
     specialTile: {fileID: 11400000, guid: f134dc804067a4c739171de1712d3f84, type: 2}
@@ -3006,6 +3008,9 @@ MonoBehaviour:
   - tile: {fileID: 11400000, guid: 395f414f34b90456084bb55da5f4b7b8, type: 2}
     specialTile: {fileID: 11400000, guid: f134dc804067a4c739171de1712d3f84, type: 2}
     tetromino: 6
+  tetrominoBosses:
+  - tile: {fileID: 11400000, guid: 8c50a8201fc6c4c0e91ecf22fe805a54, type: 2}
+    tetromino: 0
   boardSize: {x: 10, y: 20}
   spawnPosition: {x: -1, y: 8, z: 0}
   minStepDelay: 0.1
@@ -3015,7 +3020,6 @@ MonoBehaviour:
   scoreBoard: {fileID: 0}
   specialCellsCounter: {fileID: 0}
   Score: 0
-  bossTile: {fileID: 11400000, guid: 8c50a8201fc6c4c0e91ecf22fe805a54, type: 2}
 --- !u!114 &1887623657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3053,6 +3057,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   previewCount: 2
+--- !u!114 &1887623659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1887623652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7e1fa7a6e57a44c29d362c89bedfb1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stepDelay: 0.6
+  lockDelay: 0.1
+  probSpecial: 1
 --- !u!1 &2037356854
 GameObject:
   m_ObjectHideFlags: 0

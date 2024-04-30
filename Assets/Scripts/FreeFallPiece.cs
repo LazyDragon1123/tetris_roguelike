@@ -5,33 +5,29 @@ public class FreeFallPiece : MonoBehaviour
 {
     public Board board { get; private set; }
     public Vector3Int[] cells { get; private set; }
-    public TileProperty[] tileProperties;
+    public TetrominoBossData data { get; private set; }
     public Vector3Int position { get; private set; }
-    public int rotationIndex { get; private set; }
 
     public float stepDelay = 0.6f;
-    public float moveDelay = 0.1f;
-    public float lockDelay = 0.3f;
+    public float lockDelay = 0.1f;
     public float probSpecial = 1.0f;
-    public Vector3Int specialCell;
-    public bool hasSpecialCell;
     public Tile[] tiles { get; private set; }
     private float stepTime;
     private float moveTime;
     private float lockTime;
     private bool isInitialized = false;
-    private GameManager gameManager;
+    // private GameManager gameManager;
 
 
     
 
-    public void Initialize(Board board, Vector3Int position, TetrominoData data)
+    public void Initialize(Board board, Vector3Int position, TetrominoBossData data)
     {
+        this.data = data;
         this.board = board;
         this.position = position;
 
         stepTime = Time.time + stepDelay;
-        moveTime = Time.time + moveDelay;
         lockTime = 0f;
         isInitialized = true;
 
@@ -42,15 +38,23 @@ public class FreeFallPiece : MonoBehaviour
         for (int i = 0; i < cells.Length; i++) {
             cells[i] = (Vector3Int)data.cells[i];
         }
+        SetTiles();
 
     }
-
+    private void SetTiles()
+    {
+        tiles = new Tile[cells.Length];
+        for (int i = 0; i < cells.Length; i++)
+        {
+            tiles[i] = data.tile;
+        }
+    }
 
     private void Update()
     {
         if (GameManager.isGamePaused) return;
         if (!isInitialized) return;
-        board.Clear(this);
+        board.ClearBoss(this);
 
         // We use a timer to allow the player to make adjustments to the piece
         // before it locks in place
@@ -62,7 +66,7 @@ public class FreeFallPiece : MonoBehaviour
             Step();
         }
 
-        board.Set(this);
+        board.SetBoss(this);
     }
 
     private void Step()
@@ -80,10 +84,9 @@ public class FreeFallPiece : MonoBehaviour
 
     private void Lock()
     {
-        board.Set(this);
+        board.SetBoss(this);
         board.ClearLines();
-        board.SpawnPiece();
-        board.tetrominoHolder.ResetCanHold();
+        board.SpawnBossCell();
     }
 
     private bool Move(Vector2Int translation)
@@ -92,13 +95,12 @@ public class FreeFallPiece : MonoBehaviour
         newPosition.x += translation.x;
         newPosition.y += translation.y;
 
-        bool valid = board.IsValidPosition(this, newPosition);
+        bool valid = board.IsValidPositionBoss(this, newPosition);
 
         // Only save the movement if the new position is valid
         if (valid)
         {
             position = newPosition;
-            moveTime = Time.time + moveDelay;
             lockTime = 0f; // reset
         }
 
