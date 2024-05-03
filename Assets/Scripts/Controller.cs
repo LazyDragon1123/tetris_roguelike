@@ -17,6 +17,7 @@ public class Controller : MonoBehaviour {
         gameModifier.Initialize(board, ghost);
 
         board.SpawnPiece();
+        board.StartBossPhase();
     }
 
     private void OnDestroy() {

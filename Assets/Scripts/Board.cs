@@ -1,14 +1,17 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections;
 
 public class Board : MonoBehaviour
 {
     public Tilemap tilemap { get; private set; }
     public TilePropertyMap propertyMap { get; private set; }
     public Piece activePiece;
+    public FreeFallPiece bossPiece;
     
 
     public TetrominoData[] tetrominoes;
+    public TetrominoBossData[] tetrominoBosses;
     public Vector2Int boardSize = new Vector2Int(10, 20);
     public Vector3Int spawnPosition = new Vector3Int(-1, 8, 0);
     public float minStepDelay = 0.1f;
@@ -27,14 +30,22 @@ public class Board : MonoBehaviour
     public SpecialCellsCounter specialCellsCounter;
     public int Score = 0;
 
+    private bool isBossPhase = false;
+    private Vector3Int currentBossCellPosition;
+    public BossBoard bossBoard;
+    public StateTilemap stateTilemap;
+
     public void Initialize()
     {
         tilemap = GetComponentInChildren<Tilemap>();
         propertyMap = GetComponentInChildren<TilePropertyMap>();
         activePiece = GetComponentInChildren<Piece>();
+        bossPiece = GetComponentInChildren<FreeFallPiece>();
         scoreBoard = GetComponentInChildren<ScoreBoard>();
         scoreBoard.UpdateScore(Score);
         scoreBoard.UpdateSpeed(activePiece.stepDelay);
+        bossBoard = GetComponentInChildren<BossBoard>();
+        stateTilemap = GetComponentInChildren<StateTilemap>();
 
         tetrominoHolder = GetComponentInChildren<TetrominoHolder>();
         tetrominoHolder.Initialize(this);
@@ -46,6 +57,9 @@ public class Board : MonoBehaviour
 
         for (int i = 0; i < tetrominoes.Length; i++) {
             tetrominoes[i].Initialize();
+        }
+        for (int i = 0; i < tetrominoBosses.Length; i++) {
+            tetrominoBosses[i].Initialize();
         }
         InitializeUpcomingTetrominos();
     }
@@ -78,17 +92,19 @@ public class Board : MonoBehaviour
     public void GameOver()
     {
         tilemap.ClearAllTiles();
+        stateTilemap.ClearAllTiles();
         propertyMap.ClearAllTiles();
 
         // Do anything else you want on game over here..
     }
 
-    public void Set(Piece piece)
+    public void Set(Piece piece, TileState tileState = TileState.Moving)
     {
         for (int i = 0; i < piece.cells.Length; i++)
         {
             Vector3Int tilePosition = piece.cells[i] + piece.position;
             tilemap.SetTile(tilePosition, piece.tiles[i]);
+            stateTilemap.SetTile(tilePosition, tileState);
             propertyMap.SetTile(tilePosition, piece.tileProperties[i]);
         }
     }
@@ -99,6 +115,8 @@ public class Board : MonoBehaviour
         {
             Vector3Int tilePosition = piece.cells[i] + piece.position;
             tilemap.SetTile(tilePosition, null);
+            stateTilemap.SetTile(tilePosition, TileState.NotOccupied);
+            propertyMap.SetTile(tilePosition, new TileProperty { isSpecial = false });
         }
     }
 
@@ -170,11 +188,12 @@ public class Board : MonoBehaviour
         {
             Vector3Int position = new Vector3Int(col, row, 0);
             if (IsSpecialCell(position))
-        {
-            specialCellsCounter.AddSpecialCell();
-        }
+            {
+                specialCellsCounter.AddSpecialCell();
+            }
             tilemap.SetTile(position, null);
-            propertyMap.SetTile(position, new TileProperty { isSpecial = true });
+            stateTilemap.SetTile(position, TileState.NotOccupied);
+            propertyMap.SetTile(position, new TileProperty { isSpecial = false });
         }
 
         // Shift every row above down one
@@ -183,10 +202,14 @@ public class Board : MonoBehaviour
             for (int col = bounds.xMin; col < bounds.xMax; col++)
             {
                 Vector3Int position = new Vector3Int(col, row + 1, 0);
-                TileBase above = tilemap.GetTile(position);
-
-                position = new Vector3Int(col, row, 0);
-                tilemap.SetTile(position, above);
+                if (stateTilemap.HasTile(position, TileState.Locked))
+                {
+                    TileBase above = tilemap.GetTile(position);
+                    Vector3Int newposition = new Vector3Int(col, row, 0);
+                    tilemap.SetTile(newposition, above);
+                    stateTilemap.SetTile(newposition, TileState.Locked);
+                    propertyMap.SetTile(newposition, propertyMap.GetTileProperty(position));
+                }
             }
 
             row++;
@@ -221,5 +244,89 @@ public class Board : MonoBehaviour
             tetrominoHolder.SwapOrHoldTetromino();
         }
     }
-
+    public void StartBossPhase()
+    {
+        isBossPhase = true;
+        SpawnBossCell();
     }
+    public void EndBossPhase()
+    {
+        isBossPhase = false;
+    }
+
+    public void SpawnBossCell()
+    {
+        int randomColumn = Random.Range(-boardSize.x / 2, boardSize.x / 2);
+        currentBossCellPosition = new Vector3Int(randomColumn, tilemap.cellBounds.max.y - 1, 0);
+        SetBossPiece(tetrominoBosses[Random.Range(0, tetrominoBosses.Length)]);
+    }
+    private void SetBossPiece(TetrominoBossData data)
+    {
+        bossPiece.Initialize(this, currentBossCellPosition, data);
+        SoftSetBoss(bossPiece);
+    }
+    public void ClearBoss(FreeFallPiece freeFallPiece)
+    {
+        for (int i = 0; i < freeFallPiece.cells.Length; i++)
+        {
+            Vector3Int tilePosition = freeFallPiece.cells[i] + freeFallPiece.position;
+            tilemap.SetTile(tilePosition, null);
+            stateTilemap.SetTile(tilePosition, TileState.NotOccupied);
+            propertyMap.SetTile(tilePosition, new TileProperty { isSpecial = false });
+        }
+    }
+    public void SetBoss(FreeFallPiece freeFallPiece, TileState tileState = TileState.Locked)
+    {
+        for (int i = 0; i < freeFallPiece.cells.Length; i++)
+        {
+            Vector3Int tilePosition = freeFallPiece.cells[i] + freeFallPiece.position;
+            tilemap.SetTile(tilePosition, freeFallPiece.tiles[i]);
+            stateTilemap.SetTile(tilePosition, tileState);
+            propertyMap.SetTile(tilePosition, new TileProperty { isSpecial = false });
+        }
+    }
+    public void SoftSetBoss(FreeFallPiece freeFallPiece)
+    {
+        for (int i = 0; i < freeFallPiece.cells.Length; i++)
+        {
+            Vector3Int tilePosition = freeFallPiece.cells[i] + freeFallPiece.position;
+            bossBoard.SetTile(tilePosition, freeFallPiece.tiles[i]);
+            stateTilemap.SetTile(tilePosition, TileState.BossMoving);
+            propertyMap.SetTile(tilePosition, new TileProperty { isSpecial = false });
+        }
+    }
+    public void SoftClearBoss(FreeFallPiece freeFallPiece)
+    {
+        for (int i = 0; i < freeFallPiece.cells.Length; i++)
+        {
+            Vector3Int tilePosition = freeFallPiece.cells[i] + freeFallPiece.position;
+            bossBoard.SetTile(tilePosition, null);
+            stateTilemap.SetTile(tilePosition, TileState.NotOccupied);
+            propertyMap.SetTile(tilePosition, new TileProperty { isSpecial = false });
+        }
+    }
+    public bool IsValidPositionBoss(FreeFallPiece freeFallPiece, Vector3Int position)
+    {
+        RectInt bounds = Bounds;
+
+        // The position is only valid if every cell is valid
+        for (int i = 0; i < freeFallPiece.cells.Length; i++)
+        {
+            Vector3Int tilePosition = freeFallPiece.cells[i] + position;
+
+            // An out of bounds tile is invalid
+            if (!bounds.Contains((Vector2Int)tilePosition)) {
+                return false;
+            }
+
+            // A tile already occupies the position, thus invalid
+            if (stateTilemap.HasTile(tilePosition, TileState.Locked)) {
+                return false;
+            }
+            
+        }
+
+        return true;
+    }
+}
+
