@@ -3101,6 +3101,7 @@ MonoBehaviour:
     tetromino: 6
   tetrominoBosses:
   - tile: {fileID: 11400000, guid: 8c50a8201fc6c4c0e91ecf22fe805a54, type: 2}
+    lockedTile: {fileID: 11400000, guid: c941040f9255e4f90b3ff8d2459df979, type: 2}
     tetromino: 0
   boardSize: {x: 10, y: 20}
   spawnPosition: {x: -1, y: 8, z: 0}
@@ -3111,7 +3112,7 @@ MonoBehaviour:
   scoreBoard: {fileID: 0}
   specialCellsCounter: {fileID: 0}
   Score: 0
-  bossBoard: {fileID: 824719517}
+  bossBoard: {fileID: 0}
   stateTilemap: {fileID: 0}
 --- !u!114 &1887623657
 MonoBehaviour:
@@ -3162,8 +3163,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7e1fa7a6e57a44c29d362c89bedfb1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stepDelay: 0.6
-  lockDelay: 0.1
   probSpecial: 1
 --- !u!1 &1960152425
 GameObject:

@@ -280,7 +280,7 @@ public class Board : MonoBehaviour
         for (int i = 0; i < freeFallPiece.cells.Length; i++)
         {
             Vector3Int tilePosition = freeFallPiece.cells[i] + freeFallPiece.position;
-            tilemap.SetTile(tilePosition, freeFallPiece.tiles[i]);
+            tilemap.SetTile(tilePosition, freeFallPiece.lockedTiles[i]);
             stateTilemap.SetTile(tilePosition, tileState);
             propertyMap.SetTile(tilePosition, new TileProperty { isSpecial = false });
         }

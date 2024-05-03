@@ -12,6 +12,7 @@ public class FreeFallPiece : MonoBehaviour
     private float lockDelay = 0.1f;
     public float probSpecial = 1.0f;
     public Tile[] tiles { get; private set; }
+    public Tile[] lockedTiles { get; private set; }
     private float stepTime;
     private float moveTime;
     private float lockTime;
@@ -44,9 +45,11 @@ public class FreeFallPiece : MonoBehaviour
     private void SetTiles()
     {
         tiles = new Tile[cells.Length];
+        lockedTiles = new Tile[cells.Length];
         for (int i = 0; i < cells.Length; i++)
         {
             tiles[i] = data.tile;
+            lockedTiles[i] = data.lockedTile;
         }
     }
 
