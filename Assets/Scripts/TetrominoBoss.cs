@@ -10,6 +10,7 @@ public enum TetrominoBoss
 public struct TetrominoBossData
 {
     public Tile tile;
+    public Tile lockedTile;
     public TetrominoBoss tetromino;
 
     public Vector2Int[] cells { get; private set; }
