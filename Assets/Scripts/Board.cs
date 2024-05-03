@@ -320,7 +320,7 @@ public class Board : MonoBehaviour
             }
 
             // A tile already occupies the position, thus invalid
-            if (tilemap.HasTile(tilePosition) && !stateTilemap.HasTile(tilePosition, TileState.Locked)) {
+            if (stateTilemap.HasTile(tilePosition, TileState.Locked)) {
                 return false;
             }
             
