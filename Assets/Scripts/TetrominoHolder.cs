@@ -26,7 +26,6 @@ public class TetrominoHolder : MonoBehaviour
 
         if (board.activePiece == null)
         {
-            Debug.LogError("No active piece to hold or swap.");
             return;
         }
 

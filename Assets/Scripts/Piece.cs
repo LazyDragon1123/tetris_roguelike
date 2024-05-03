@@ -167,7 +167,7 @@ public class Piece : MonoBehaviour
 
     private void Lock()
     {
-        board.Set(this);
+        board.Set(this, TileState.Locked);
         board.ClearLines();
         board.SpawnPiece();
         board.tetrominoHolder.ResetCanHold();

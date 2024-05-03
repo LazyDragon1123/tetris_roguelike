@@ -54,7 +54,7 @@ public class FreeFallPiece : MonoBehaviour
     {
         if (GameManager.isGamePaused) return;
         if (!isInitialized) return;
-        board.ClearBoss(this);
+        board.SoftClearBoss(this);
 
         // We use a timer to allow the player to make adjustments to the piece
         // before it locks in place
@@ -66,7 +66,7 @@ public class FreeFallPiece : MonoBehaviour
             Step();
         }
 
-        board.SetBoss(this);
+        board.SoftSetBoss(this);
     }
 
     private void Step()
