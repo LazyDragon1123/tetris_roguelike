@@ -8,8 +8,8 @@ public class FreeFallPiece : MonoBehaviour
     public TetrominoBossData data { get; private set; }
     public Vector3Int position { get; private set; }
 
-    public float stepDelay = 0.6f;
-    public float lockDelay = 0.1f;
+    private float stepDelay = 0.2f;
+    private float lockDelay = 0.1f;
     public float probSpecial = 1.0f;
     public Tile[] tiles { get; private set; }
     private float stepTime;
