@@ -39,6 +39,16 @@ public class TilePropertyMap : MonoBehaviour
         return false;
     }
 
+    public bool IsTileAttackable(Vector3Int position)
+    {
+        TileProperty property = GetTileProperty(position);
+        if (property != null)
+        {
+            return property.isAttackable;
+        }
+        return false;
+    }
+
     public void ClearAllTiles()
     {
         properties.Clear();
