@@ -28,6 +28,7 @@ public class Board : MonoBehaviour
     }
     public ScoreBoard scoreBoard;
     public SpecialCellsCounter specialCellsCounter;
+    public BossHpCounter bossHpCounter;
     public int Score = 0;
 
     private bool isBossPhase = false;
@@ -53,6 +54,7 @@ public class Board : MonoBehaviour
         upcomingTetrominos.Initialize(this);
 
         specialCellsCounter = GetComponentInChildren<SpecialCellsCounter>();
+        bossHpCounter = GetComponentInChildren<BossHpCounter>();
         
 
         for (int i = 0; i < tetrominoes.Length; i++) {
@@ -94,7 +96,8 @@ public class Board : MonoBehaviour
         tilemap.ClearAllTiles();
         stateTilemap.ClearAllTiles();
         propertyMap.ClearAllTiles();
-
+        Score = 0;
+        scoreBoard.UpdateScore(Score);
         // Do anything else you want on game over here..
     }
 
@@ -191,6 +194,11 @@ public class Board : MonoBehaviour
             {
                 specialCellsCounter.AddSpecialCell();
             }
+            if (IsAttackableCell(position))
+            {
+                bossHpCounter.Addcount();
+                GameOver();
+            }
             tilemap.SetTile(position, null);
             stateTilemap.SetTile(position, TileState.NotOccupied);
             propertyMap.SetTile(position, new TileProperty { isSpecial = false });
@@ -221,6 +229,11 @@ public class Board : MonoBehaviour
     private bool IsSpecialCell(Vector3Int position)
     {
         return propertyMap.IsTileSpecial(position);
+    }
+
+    private bool IsAttackableCell(Vector3Int position)
+    {
+        return propertyMap.IsTileAttackable(position);
     }
 
     // Method to increase the falling speed of the active piece

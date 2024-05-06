@@ -6,11 +6,12 @@ public class FreeFallPiece : MonoBehaviour
     public Board board { get; private set; }
     public Vector3Int[] cells { get; private set; }
     public TetrominoBossData data { get; private set; }
+    public TileProperty[] tileProperties;
     public Vector3Int position { get; private set; }
 
     private float stepDelay = 0.2f;
     private float lockDelay = 0.1f;
-    public float probSpecial = 1.0f;
+    public float probAttackagle = 1.0f;
     public Tile[] tiles { get; private set; }
     public Tile[] lockedTiles { get; private set; }
     private float stepTime;
@@ -39,8 +40,9 @@ public class FreeFallPiece : MonoBehaviour
         for (int i = 0; i < cells.Length; i++) {
             cells[i] = (Vector3Int)data.cells[i];
         }
-        SetTiles();
 
+        SetTileProperties();
+        SetTiles();
     }
     private void SetTiles()
     {
@@ -52,7 +54,27 @@ public class FreeFallPiece : MonoBehaviour
             lockedTiles[i] = data.lockedTile;
         }
     }
+    private void SetTileProperties()
+    {
+        float randomValue = UnityEngine.Random.Range(0.0f, 1.0f);
+        tileProperties = InitTilePropertiesArray(cells.Length);
+        if (randomValue <= probAttackagle)
+        {
+            int index = Random.Range(0, cells.Length);
+            tileProperties[index].isAttackable = true;
+        }
+    }
 
+    private TileProperty[] InitTilePropertiesArray(int length)
+        {
+        TileProperty[] initTileProperties = new TileProperty[length];
+        
+        for (int i = 0; i < length; i++)
+        {
+            initTileProperties[i] = new TileProperty {};
+        }
+        return initTileProperties;
+    }    
     private void Update()
     {
         if (GameManager.isGamePaused) return;
