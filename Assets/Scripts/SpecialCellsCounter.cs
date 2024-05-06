@@ -4,7 +4,8 @@ public class SpecialCellsCounter : MonoBehaviour
 {
     public int threshold = 3; // The threshold to trigger options
     private int specialCellCount = 0;
-    public GameModifier gameModifier; // Reference to the GameModifier to call ShowOptions
+    public GameModifier gameModifier;
+    public SpecialCellProgressBar specialCellProgressBar;
 
     public void AddSpecialCell()
     {
@@ -12,8 +13,10 @@ public class SpecialCellsCounter : MonoBehaviour
         if (specialCellCount >= threshold)
         {
             gameModifier.ShowOptions(); // Trigger the options display
-            specialCellCount = 0; // Reset the count or keep accumulating depending on the game design
+            specialCellCount = 0;
         }
+        specialCellProgressBar.UpdateBar(specialCellCount);
+
     }
     public int CurrentSpecialCellCount => specialCellCount;
 }

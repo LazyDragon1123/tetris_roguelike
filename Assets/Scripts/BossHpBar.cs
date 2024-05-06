@@ -4,13 +4,9 @@ using UnityEngine.UI;
 public class BossHpBar : MonoBehaviour
 {
     public Slider progressBar;
-    public BossHpCounter bossHpCounter;
 
-    void Update()
+    public void UpdateBar(int damageCount)
     {
-        if (bossHpCounter != null && progressBar != null)
-        {
-            progressBar.value = bossHpCounter.CurrentBossDamageCount;
-        }
+        progressBar.value = damageCount;
     }
 }

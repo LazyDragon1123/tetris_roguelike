@@ -98,6 +98,9 @@ public class Board : MonoBehaviour
         propertyMap.ClearAllTiles();
         Score = 0;
         scoreBoard.UpdateScore(Score);
+        tetrominoHolder.Initialize(this);
+        upcomingTetrominos.Initialize(this);
+        InitializeUpcomingTetrominos();
         // Do anything else you want on game over here..
     }
 
@@ -157,7 +160,7 @@ public class Board : MonoBehaviour
             // Only advance to the next row if the current is not cleared
             // because the tiles above will fall down when a row is cleared
             if (IsLineFull(row)) {
-                LineClear(row);
+                StartLineClear(row);
             } else {
                 row++;
             }
@@ -181,10 +184,14 @@ public class Board : MonoBehaviour
         return true;
     }
 
-    public void LineClear(int row)
+    public void StartLineClear(int row)
+    {
+        StartCoroutine(LineClearCoroutine(row));
+    }
+
+    private IEnumerator LineClearCoroutine(int row)
     {
         RectInt bounds = Bounds;
-        // int specialCellCleared = 0;
 
         // Clear all tiles in the row
         for (int col = bounds.xMin; col < bounds.xMax; col++)
@@ -196,35 +203,88 @@ public class Board : MonoBehaviour
             }
             if (IsAttackableCell(position))
             {
-                bossHpCounter.Addcount();
+                bossHpCounter.AddCount();
                 GameOver();
             }
+
             tilemap.SetTile(position, null);
             stateTilemap.SetTile(position, TileState.NotOccupied);
             propertyMap.SetTile(position, new TileProperty { isSpecial = false });
         }
 
-        // Shift every row above down one
+        // Add a yield statement to allow other operations to run in the meantime
+        yield return null;
+
+        // Shift rows down
         while (row < bounds.yMax)
         {
             for (int col = bounds.xMin; col < bounds.xMax; col++)
             {
-                Vector3Int position = new Vector3Int(col, row + 1, 0);
-                if (stateTilemap.HasTile(position, TileState.Locked))
+                Vector3Int abovePos = new Vector3Int(col, row + 1, 0);
+                if (stateTilemap.HasTile(abovePos, TileState.Locked))
                 {
-                    TileBase above = tilemap.GetTile(position);
-                    Vector3Int newposition = new Vector3Int(col, row, 0);
-                    tilemap.SetTile(newposition, above);
-                    stateTilemap.SetTile(newposition, TileState.Locked);
-                    propertyMap.SetTile(newposition, propertyMap.GetTileProperty(position));
+                    TileBase aboveTile = tilemap.GetTile(abovePos);
+                    Vector3Int newPos = new Vector3Int(col, row, 0);
+                    tilemap.SetTile(newPos, aboveTile);
+                    stateTilemap.SetTile(newPos, TileState.Locked);
+                    propertyMap.SetTile(newPos, propertyMap.GetTileProperty(abovePos));
                 }
             }
 
             row++;
+            yield return null; // Yield control to allow other tasks to run between rows
         }
+
+        // Update score
         Score += 100;
         scoreBoard.UpdateScore(Score);
     }
+
+
+    // public void LineClear(int row)
+    // {
+    //     RectInt bounds = Bounds;
+    //     // int specialCellCleared = 0;
+
+    //     // Clear all tiles in the row
+    //     for (int col = bounds.xMin; col < bounds.xMax; col++)
+    //     {
+    //         Vector3Int position = new Vector3Int(col, row, 0);
+    //         if (IsSpecialCell(position))
+    //         {
+    //             specialCellsCounter.AddSpecialCell();
+    //         }
+    //         if (IsAttackableCell(position))
+    //         {
+    //             bossHpCounter.Addcount();
+    //             GameOver();
+    //         }
+    //         tilemap.SetTile(position, null);
+    //         stateTilemap.SetTile(position, TileState.NotOccupied);
+    //         propertyMap.SetTile(position, new TileProperty { isSpecial = false });
+    //     }
+
+    //     // Shift every row above down one
+    //     while (row < bounds.yMax)
+    //     {
+    //         for (int col = bounds.xMin; col < bounds.xMax; col++)
+    //         {
+    //             Vector3Int position = new Vector3Int(col, row + 1, 0);
+    //             if (stateTilemap.HasTile(position, TileState.Locked))
+    //             {
+    //                 TileBase above = tilemap.GetTile(position);
+    //                 Vector3Int newposition = new Vector3Int(col, row, 0);
+    //                 tilemap.SetTile(newposition, above);
+    //                 stateTilemap.SetTile(newposition, TileState.Locked);
+    //                 propertyMap.SetTile(newposition, propertyMap.GetTileProperty(position));
+    //             }
+    //         }
+
+    //         row++;
+    //     }
+    //     Score += 100;
+    //     scoreBoard.UpdateScore(Score);
+    // }
 
     private bool IsSpecialCell(Vector3Int position)
     {

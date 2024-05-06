@@ -4,13 +4,9 @@ using UnityEngine.UI;
 public class SpecialCellProgressBar : MonoBehaviour
 {
     public Slider progressBar;
-    public SpecialCellsCounter specialCellsCounter;
 
-    void Update()
+    public void UpdateBar(int cellCount)
     {
-        if (specialCellsCounter != null && progressBar != null)
-        {
-            progressBar.value = specialCellsCounter.CurrentSpecialCellCount;
-        }
+        progressBar.value = cellCount;
     }
 }
