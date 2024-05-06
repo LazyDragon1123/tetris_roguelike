@@ -12,6 +12,7 @@ public class UpcomingTetrominos : MonoBehaviour
     public void Initialize(Board board)
     {
         this.board = board;
+        upcomingTetrominos = new Queue<TetrominoData>();
         upcomingTetrominosDisplay = GetComponentInChildren<UpcomingTetrominosDisplay>();
         upcomingTetrominosDisplay.Initialize(this);
     }

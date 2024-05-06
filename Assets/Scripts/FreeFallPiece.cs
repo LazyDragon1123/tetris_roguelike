@@ -15,7 +15,6 @@ public class FreeFallPiece : MonoBehaviour
     public Tile[] tiles { get; private set; }
     public Tile[] lockedTiles { get; private set; }
     private float stepTime;
-    private float moveTime;
     private float lockTime;
     private bool isInitialized = false;
     // private GameManager gameManager;
@@ -79,7 +78,7 @@ public class FreeFallPiece : MonoBehaviour
     {
         if (GameManager.isGamePaused) return;
         if (!isInitialized) return;
-        board.SoftClearBoss(this);
+        // board.SoftClearBoss(this);
 
         // We use a timer to allow the player to make adjustments to the piece
         // before it locks in place
@@ -88,10 +87,12 @@ public class FreeFallPiece : MonoBehaviour
 
         // Advance the piece to the next row every x seconds
         if (Time.time > stepTime) {
+            board.SoftClearBoss(this);
             Step();
+            board.SoftSetBoss(this);
         }
 
-        board.SoftSetBoss(this);
+        // board.SoftSetBoss(this);
     }
 
     private void Step()

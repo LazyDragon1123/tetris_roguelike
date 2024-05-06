@@ -1214,6 +1214,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FullHp: 3
+  bossHpBar: {fileID: 2085215882}
 --- !u!4 &792752305
 Transform:
   m_ObjectHideFlags: 0
@@ -1226,7 +1227,8 @@ Transform:
   m_LocalPosition: {x: -0.65799713, y: -0.36647934, z: -0.022655487}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2085215881}
   m_Father: {fileID: 1887623654}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &824719515
@@ -1373,8 +1375,6 @@ RectTransform:
   - {fileID: 883389086}
   - {fileID: 1685962359}
   - {fileID: 1100787384}
-  - {fileID: 1058173052}
-  - {fileID: 2085215881}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1722,11 +1722,11 @@ Transform:
   m_GameObject: {fileID: 1058173051}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 36.615986, y: 18.655334, z: -2822.2}
-  m_LocalScale: {x: 45, y: 45, z: 45}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 856222040}
+  m_Father: {fileID: 1417352823}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1058173053
 MonoBehaviour:
@@ -1741,7 +1741,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   progressBar: {fileID: 1685962360}
-  specialCellsCounter: {fileID: 1417352822}
 --- !u!1 &1062971706
 GameObject:
   m_ObjectHideFlags: 0
@@ -2485,6 +2484,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   threshold: 3
   gameModifier: {fileID: 1232434648}
+  specialCellProgressBar: {fileID: 1058173053}
 --- !u!4 &1417352823
 Transform:
   m_ObjectHideFlags: 0
@@ -2497,7 +2497,8 @@ Transform:
   m_LocalPosition: {x: 0.8136885, y: 0.414563, z: 27.284443}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1058173052}
   m_Father: {fileID: 1887623654}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1429556100
@@ -4198,11 +4199,11 @@ Transform:
   m_GameObject: {fileID: 2085215880}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -29.60987, y: -16.491571, z: -4051.0193}
-  m_LocalScale: {x: 45, y: 45, z: 45}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 856222040}
+  m_Father: {fileID: 792752305}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2085215882
 MonoBehaviour:
@@ -4217,7 +4218,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   progressBar: {fileID: 1100787385}
-  bossHpCounter: {fileID: 792752304}
 --- !u!1 &2144466704
 GameObject:
   m_ObjectHideFlags: 0
