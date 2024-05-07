@@ -44,11 +44,11 @@ public class GameModifier : MonoBehaviour
         availableOptions.Clear();
         availableOptions.Add(new GameOption("Increase Speed", IncreaseFallingSpeed));
         availableOptions.Add(new GameOption("Clear Ghost", ClearAllGhosts));
-        availableOptions.Add(new GameOption("Activate Power", ActivatePower));
         availableOptions.Add(new GameOption("Score +1000", ScoreSmall));
         availableOptions.Add(new GameOption("Score +5000", ScoreMedium));
         availableOptions.Add(new GameOption("Score +10000", ScoreLarge));
         availableOptions.Add(new GameOption("Spawn Rate Up", SpawnRateUp));
+        availableOptions.Add(new GameOption("Increase Hold Capacity", IncreaseHoldCapacity));
     }
 
 
@@ -109,10 +109,6 @@ public class GameModifier : MonoBehaviour
         ghost.SetActive(false);
     }
 
-    private void ActivatePower()
-    {
-        Debug.Log("Activating power");
-    }
 
     private void ScoreSmall()
     {
@@ -135,6 +131,10 @@ public class GameModifier : MonoBehaviour
     private void SpawnRateUp()
     {
         board.activePiece.probSpecial = Mathf.Min(1.0f, board.activePiece.probSpecial + 0.1f);
+    }
+    private void IncreaseHoldCapacity()
+    {
+        board.IncreaseHoldCapacity();
     }
 
 }

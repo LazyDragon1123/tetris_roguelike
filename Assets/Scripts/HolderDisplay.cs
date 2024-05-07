@@ -38,7 +38,7 @@ public class HolderDisplay : MonoBehaviour
     {
         foreach (var cell in tetrominoData.cells)
         {
-            Vector3Int tilePosition = new Vector3Int(cell.x - 10, cell.y - index * 5, 0); // Offset each Tetromino vertically
+            Vector3Int tilePosition = new Vector3Int(cell.x - 10, cell.y + 3 - index * 4, 0); // Offset each Tetromino vertically
             holderTilemap.SetTile(tilePosition, tetrominoData.tile);
         }
     }

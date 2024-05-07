@@ -10,13 +10,15 @@ public class SpecialCellsCounter : MonoBehaviour
     public void AddSpecialCell()
     {
         specialCellCount++;
-        if (specialCellCount >= threshold)
+    }
+    public void UpdateCount()
+    {   
+        while (specialCellCount >= threshold)
         {
             gameModifier.ShowOptions(); // Trigger the options display
-            specialCellCount = 0;
+            specialCellCount -= threshold;
         }
         specialCellProgressBar.UpdateBar(specialCellCount);
-
     }
     public int CurrentSpecialCellCount => specialCellCount;
 }
