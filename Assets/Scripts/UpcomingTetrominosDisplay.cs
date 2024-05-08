@@ -31,7 +31,7 @@ public class UpcomingTetrominosDisplay : MonoBehaviour
     {
         foreach (var cell in tetrominoData.cells)
         {
-            Vector3Int tilePosition = new Vector3Int(cell.x + 8, cell.y - index * 5, 0); // Offset each Tetromino vertically
+            Vector3Int tilePosition = new Vector3Int(cell.x + 8, cell.y - index * 3 + 5, 0); // Offset each Tetromino vertically
             upcomingDisplayTilemap.SetTile(tilePosition, tetrominoData.tile);
         }
     }

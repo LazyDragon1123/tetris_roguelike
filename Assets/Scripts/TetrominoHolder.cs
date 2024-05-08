@@ -13,7 +13,7 @@ public class TetrominoHolder : MonoBehaviour
     public HolderGrid holderGrid;
 
     public void Initialize(Board board)
-    {   
+    {
         this.board = board;
         heldTetrominos = new TetrominoData[holdCapacity];
         holderDisplay = GetComponentInChildren<HolderDisplay>();
