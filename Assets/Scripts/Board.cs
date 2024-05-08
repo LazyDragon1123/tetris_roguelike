@@ -165,6 +165,8 @@ public class Board : MonoBehaviour
                 row++;
             }
         }
+        specialCellsCounter.UpdateCount();
+
     }
 
     public bool IsLineFull(int row)
@@ -204,7 +206,6 @@ public class Board : MonoBehaviour
             if (IsAttackableCell(position))
             {
                 bossHpCounter.AddCount();
-                GameOver();
             }
 
             tilemap.SetTile(position, null);
@@ -241,51 +242,6 @@ public class Board : MonoBehaviour
     }
 
 
-    // public void LineClear(int row)
-    // {
-    //     RectInt bounds = Bounds;
-    //     // int specialCellCleared = 0;
-
-    //     // Clear all tiles in the row
-    //     for (int col = bounds.xMin; col < bounds.xMax; col++)
-    //     {
-    //         Vector3Int position = new Vector3Int(col, row, 0);
-    //         if (IsSpecialCell(position))
-    //         {
-    //             specialCellsCounter.AddSpecialCell();
-    //         }
-    //         if (IsAttackableCell(position))
-    //         {
-    //             bossHpCounter.Addcount();
-    //             GameOver();
-    //         }
-    //         tilemap.SetTile(position, null);
-    //         stateTilemap.SetTile(position, TileState.NotOccupied);
-    //         propertyMap.SetTile(position, new TileProperty { isSpecial = false });
-    //     }
-
-    //     // Shift every row above down one
-    //     while (row < bounds.yMax)
-    //     {
-    //         for (int col = bounds.xMin; col < bounds.xMax; col++)
-    //         {
-    //             Vector3Int position = new Vector3Int(col, row + 1, 0);
-    //             if (stateTilemap.HasTile(position, TileState.Locked))
-    //             {
-    //                 TileBase above = tilemap.GetTile(position);
-    //                 Vector3Int newposition = new Vector3Int(col, row, 0);
-    //                 tilemap.SetTile(newposition, above);
-    //                 stateTilemap.SetTile(newposition, TileState.Locked);
-    //                 propertyMap.SetTile(newposition, propertyMap.GetTileProperty(position));
-    //             }
-    //         }
-
-    //         row++;
-    //     }
-    //     Score += 100;
-    //     scoreBoard.UpdateScore(Score);
-    // }
-
     private bool IsSpecialCell(Vector3Int position)
     {
         return propertyMap.IsTileSpecial(position);
@@ -316,6 +272,10 @@ public class Board : MonoBehaviour
         {
             tetrominoHolder.SwapOrHoldTetromino();
         }
+    }
+    public void IncreaseHoldCapacity()
+    {
+        tetrominoHolder.IncreaseCapacity();
     }
     public void StartBossPhase()
     {
